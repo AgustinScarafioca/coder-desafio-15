@@ -1,0 +1,60 @@
+div(class='container.mt-3')
+    div(class='jumbotron')     
+        h1(style="color:blue;") Agregar producto
+        br
+        form(action="/productos", method="post")
+            div(class="form-group")
+                label(for="name")
+                    b Nombre
+                input#name.form-control(type="text", name="name")
+            div(class="form-group")
+                label(for="description")
+                    b Descripcion
+                input#description.form-control(type="text", name="description")
+            div(class="form-group")
+                label(for="code")
+                    b Codigo
+                input#code.form-control(type="text", name="code")
+            div(class="form-group")
+                label(for="price")
+                    b Precio
+                input#price.form-control(type="number", name="price")
+            div(class="form-group")
+                label(for="stock")
+                    b Stock
+                input#stock.form-control(type="number", name="stock")
+            div(class="form-group")
+                label(for="thumbnail")
+                    b Foto
+                input#thumbnail.form-control(type="text", name="thumbnail")
+            button.btn.btn-success.mt-3.mb-5 Enviar
+        h2(style="color:crimson;") Historial
+        if productos && productos.length > 0
+            div(class="table-responsive")
+                table.table.table-dark
+                    tr(style="color: yellow;")
+                        th Nombre
+                        th Descripcion
+                        th Codigo
+                        th Precio
+                        th Stock
+                        th Foto
+                    each val in productos
+                        tr
+                            td= val.name
+                            td= val.description
+                            td= val.code
+                            td= val.price
+                            td= val.stock
+                            td= val.thumbnail
+        else
+            h3(class="alert alert-danger") No hay productos
+        h1 Mi app chat 
+        div(id="messages")
+        form(onsubmit='return addMessage()')
+            input#nameChat.form-control(type='text' placeholder='Tu nombre')
+            input#lastName.form-control(type='text' placeholder='Tu apellido')
+            input#email.form-control(type='email' placeholder='Tu email')
+            input#age.form-control(type='number' placeholder='Tu edad')
+            input#text.form-control(type='text' placeholder='Escribe algo...')
+            input.btn.btn-success.mt-3.mb-5(type='submit' value='Enviar')
