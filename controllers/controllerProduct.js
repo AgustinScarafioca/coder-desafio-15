@@ -1,11 +1,14 @@
-import Container from "../containers/containerProduct";
+import Container from "../containers/containerProduct.js";
+import logger from '../utils/loggers.js'
 
 
 const Product = new Container()
 
 export const get = (req, res) => {
+    const { url, method } = req
     const id = req.params.id;
     if (id) {
+        logger.info('Ruta' + method + url)
         Product.get(id)
             .then(products => {
                 res.json(products);
@@ -15,6 +18,7 @@ export const get = (req, res) => {
             });
     }
     else{
+        logger.info('Ruta' + method + url)
         const user = req.user.username
         const saludo = `Bienvenido ${user}`
         Product.get()
@@ -66,6 +70,8 @@ export const update = (req, res) => {
 };
 
 export const Delete = (req, res) => {
+    const { url, method } = req
+    logger.info('Ruta ' + method + url)
     Product.delete( req.params.id)
         .then(id => {
             res.json({ id: id });

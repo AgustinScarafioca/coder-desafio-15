@@ -1,7 +1,6 @@
 {
   "name": "coder-desafio-15",
   "version": "1.0.0",
-  "description": "",
   "type": "module",
   "main": "server.js",
   "scripts": {
@@ -26,5 +25,15 @@
     "passport-local": "^1.0.0",
     "pug": "^3.0.2",
     "socket.io": "^4.6.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AgustinScarafioca/coder-desafio-15.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AgustinScarafioca/coder-desafio-15/issues"
+  },
+  "homepage": "https://github.com/AgustinScarafioca/coder-desafio-15#readme",
+  "description": ""
 }

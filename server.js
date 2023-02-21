@@ -2,9 +2,9 @@ import express from "express";
 import session from "express-session";
 import cookieParser from "cookie-parser";
 import MongoStore from "connect-mongo";
-import { ingresar, products, register, exit } from "./routers/routers.js";
+import { ingresar, products, registrarse, exit } from "./routers/routers.js";
 import productosTest from "./routers/routersTest.js";
-import info from "./routers/info.js";
+import { info } from "./routers/info.js";
 import apiRandom from "./routers/apiRandom.js";
 import { createServer } from "http";
 import { Server } from "socket.io";
@@ -16,17 +16,41 @@ import { fileURLToPath } from "url";
 import passport from "passport";
 import parseArgs from 'minimist';
 import dotenv from 'dotenv';
+import cluster from 'cluster'
+import os from 'os'
+import logger from './utils/loggers.js'
+
+const numCpus = os.cpus().length
 
 dotenv.config()
 
-const MONGO = process.env.MONGO
 
 const config = {
     alias: { p: 'port', },
     default: { port: 8080, },
 };
 
-const { port } = parseArgs(process.argv.slice(2), config);
+const args = parseArgs(process.argv.slice(2), config)
+
+if(args.modo == 'CLUSTER' && cluster.isPrimary){
+    console.log(`Master process ID; ${process.pid} is running`)
+    console.log(numCpus)
+
+    for(let i = 0; i < numCpus; i++){
+        cluster.fork()
+    } 
+
+    cluster.on('exit', (worker) =>{
+        console.log(`Worker ${worker.process.pid} has finished`)
+        cluster.fork()
+    })
+} else{
+    dotenv.config()
+}
+
+const MONGO = process.env.MONGO
+
+const PORT = args.port
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -42,7 +66,7 @@ app.set("view engine", "pug");
 app.use(cookieParser());
 app.use(session({
     store: MongoStore.create({
-        mongoUrl: "mongodb+srv://coderhouse:coderhouse@cluster0.detnzhp.mongodb.net/ecommerce1?retryWrites=true&w=majority",
+        mongoUrl: MONGO,
         mongoOptions: advancedOptions
     }),
     secret: "coderhouse",
@@ -53,17 +77,25 @@ app.use(session({
 }))
 app.use(passport.initialize())
 app.use(passport.session())
-app.use(express.static(__dirname + "/Public"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-app.use("/ingresar", ingresar);
-app.use("/productos", products);
-app.use("/registrarse", register);
-app.use("/salir", exit);
-app.use("/test", productosTest);
+app.use(express.static(__dirname + "/Public"))
+app.use(express.json())
+app.use(express.urlencoded({ extended: true }))
+app.use('/ingresar', ingresar)
+app.use('/productos', products)
+app.use('/registrarse', registrarse)
+app.use('/salir', exit)
+app.use('/test', productosTest)
+app.use('info', info)
+app.use('apiRandom', apiRandom)
 
 app.get('/', (req, res) => {
     res.redirect('/productos')
+})
+
+app.get('*', (req, res) =>{
+    const { url, method} = req
+    logger.warn('Ruta ' + method + url + 'no implementada')
+    res.send('Ruta ' + method + url + 'no implementada')
 })
 
 io.on("connection", async socket =>{
@@ -105,6 +137,6 @@ function print(objeto) {
     console.log(util.inspect(objeto,false,12,true));
 };
 
-httpServer.listen(port, () => {
-    console.log(`Servidor corriento en ${port}`);
+httpServer.listen(PORT, () => {
+    console.log('Servidor corriendo en ' +PORT);
 });

@@ -1,9 +1,9 @@
-import container from '../containers/containerUser'
+import Container from '../containers/containerUser.js'
 import passport from 'passport'
 import {Strategy as LocalStrategy} from 'passport-local'
 import bcrypt from 'bcrypt'
 
-const dbUser = new container()
+const dbUser = new Container()
 
 export const register = new LocalStrategy({
     passReqToCallback: true
@@ -11,7 +11,7 @@ export const register = new LocalStrategy({
     const { name } = req.body
     const user = await dbUser.getUser(username)
 
-    if(usuario){
+    if(user){
         return done('Usuario ya registrado', false)
     }
     const newUser = {

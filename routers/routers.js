@@ -1,13 +1,14 @@
-import { get, add, update, Delete, } from "../controllers/controllerProduct";
-import { getSignIn, getSignUp, getLogout, } from "../controllers/controllerUser";
+import { get, add, update, Delete } from "../controllers/controllerProduct.js"
+import { getSignIn, getSignUp, getLogout, } from "../controllers/controllerUser.js"
 import passport from "passport";
-import { register, login } from '../middleware/registerLoginPassport'
-import requireAuth from "../middleware/requireAuth";
+import { register, login } from '../middleware/registerLoginPassport.js'
+import requireAuth from "../middleware/requireAuth.js"
 import { Router } from 'express'
+import logger from '../utils/loggers.js'
 
 const products = Router();
 const ingresar = Router();
-const register = Router();
+const registrarse = Router();
 const exit = Router();
 
 passport.use('register', register)
@@ -21,26 +22,28 @@ ingresar.post("/", passport.authenticate("login", {
 }))
 
 ingresar.get("/errorIngresar", (req, res) => {
+    logger.info("Ruta " + method + url)
     res.render("login-error")
 });
 
-register.get("/", getSignUp)
+registrarse.get("/", getSignUp)
 
-register.post("/", passport.authenticate("register", {
+registrarse.post("/", passport.authenticate("register", {
     failureRedirect: "/registro/errorRegistro", 
     successRedirect: "/products",
 }));
 
-register.get("/errorRegistro", (req, res)=> {
+registrarse.get("/errorRegistro", (req, res)=> {
+    logger.info("Ruta " + method + url)
     res.render("register-error")
 });
 
 exit.get("/", getLogout)
 
 
-products.get("/:id?", requireAuthentication, get);
-products.post("/", requireAuthentication, add);
-products.put("/:id", requireAuthentication, update);
-products.delete("/:id", requireAuthentication, Delete);
+products.get("/:id?", requireAuth, get)
+products.post("/", requireAuth, add)
+products.put("/:id", requireAuth, update)
+products.delete("/:id", requireAuth, Delete)
 
-export {ingresar, products, register, exit};
+export {ingresar, products, registrarse, exit}

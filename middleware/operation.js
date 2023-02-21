@@ -1,10 +1,12 @@
+import logger from '../utils/loggers.js'
+
 process.on('exit', () => {
-    console.log('Hilo terminado: ' + process.pid)
+    logger.info('Hilo terminado: ' + process.pid)
 })
 
 process.on('message', msg =>{
     const quantity = parseInt(msg)
-    console.log('Hilo iniciado: ' + process.pid)
+    logger.info('Hilo iniciado: ' + process.pid)
     const outNumbers = {}
 
     function randomNumber(){

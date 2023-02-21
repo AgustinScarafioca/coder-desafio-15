@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
-import models from '../models/models'
+import models from '../models/models.js'
 import dotenv from 'dotenv'
+import logger from '../utils/loggers.js'
 
 dotenv.config()
 
@@ -12,10 +13,10 @@ mongoose.connect(mongoDB, {
     useUnifiedTopology: true
 }, (err) =>{
     if(err){
-        console.log(err)
+        logger.log(err)
     } 
     else{
-        console.log('MongoDB connected')
+        logger.log('MongoDB connected')
     }
 })
 

@@ -1,5 +1,5 @@
 import mongoose, { model } from 'mongoose'
-import modelsChat from '../models/modelsChat'
+import modelsChat from '../models/modelsChat.js'
 import dotenv from 'dotenv'
 
 dotenv.config()

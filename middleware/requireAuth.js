@@ -1,5 +1,5 @@
 export default function requireAuth(req, res, next){
-    if(req.isAuthenticater()){
+    if(req.isAuthenticated()){
         next()
     }
 
