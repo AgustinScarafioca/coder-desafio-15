@@ -16,7 +16,7 @@ export const getSignUp = (req, res) => {
     if (req.isAuthenticated()) {
         res.redirect("/productos");
     };
-    res.render("registrarse");
+    res.render("register");
 };
 
 export const getLogout = (req, res) => {

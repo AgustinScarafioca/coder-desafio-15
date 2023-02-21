@@ -1,3 +1,4 @@
+
 doctype html
 html(lang="en")
     head
@@ -7,4 +8,17 @@ html(lang="en")
         meta(name="viewport", content="width=device-width, initial-scale=1.0")
         title=pageTitle
     body
-        include partials/ingreso.pug
+        div(class='container.mt-3')
+            div(class='jumbotron')
+                b Ingresar
+                form(action="/ingresar", method="post")
+                    div(class="form-group")
+                        label(for="username")
+                        b Para ingresar escriba su Correo
+                    input#username.form-control(type="text", name="username")
+                div(class="form-group")
+                    label(for="password")
+                        b Contraseña
+                    input#password.form-control(type="password", name="password")
+                button.btn.btn-success.mt-4.mb-2 Ingresar
+                button.btn.btn-success.mb-2(onclick="location.href='/register'") Registrarse
